@@ -167,5 +167,3 @@ $("menu").addEventListener("change", function (e) {
 load();
 save();
 showView("sku");
-</body>
-</html>
