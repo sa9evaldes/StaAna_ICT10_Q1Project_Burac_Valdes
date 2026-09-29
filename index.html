@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>O'Hare Air Co. | SKUs &amp; Checkout</title>
+<style>
+:root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #fff 0%, #00ccff 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-family: "Trebuchet MS", "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: #221a3a;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+}
+nav { background: #fff; color: #00ccff; }
+.nav-inner { max-width: 1140px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; }
+.brand svg { width: 34px; height: 34px; }
+.tabs { display: flex; gap: 6px; }
+.tab { background: none; border: 0; color: #00ccff; font: inherit; padding: 8px 14px; border-radius: 8px; cursor: pointer; min-height: 40px; }
+.tab:hover { color: #0067bc; }
+.tab[aria-current="page"] { color: #00ccff; background: #0067bc; }
+.tab:focus-visible, .btn:focus-visible, .ctl:focus-visible, .linkbtn:focus-visible { outline: 3px solid #ffd54a; outline-offset: 2px; }
+main { flex: 1; padding: 40px 16px; }
+.card { max-width: 640px; margin: 0 auto; background: #fff; border-radius: 1.1rem; box-shadow: 0 1rem 3rem rgba(0,0,0,.3); overflow: hidden; }
+.card-header { background: linear-gradient(90deg, #00ccff, #6a1fc2); color: #fff; text-align: center; padding: 22px 20px; }
+.card-header h3 { margin: 0; font-size: 1.6rem; font-weight: 600; }
+.card-header small { opacity: .88; }
+.card-body { padding: 24px; }
+.card-footer { text-align: center; color: #00ccff; font-size: .88rem; padding: 14px; border-top: 1px solid #e6dff2; background: #f8f5fd; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.mb { margin-bottom: 16px; }
+label.lbl { display: block; font-weight: 700; color: #33284d; margin-bottom: 6px; }
+.ctl { width: 100%; padding: 8px 12px; font: inherit; border: 1px solid #cfc6e0; border-radius: 8px; background: #fff; color: #221a3a; }
+.ctl:focus { border-color: #b26ae0; box-shadow: 0 0 0 .22rem rgba(178,106,224,.3); }
+.btn { width: 100%; margin-top: 6px; padding: 12px; font: inherit; font-size: 1.12rem; font-weight: 700; letter-spacing: .4px; color: #fff; border: 0; border-radius: 10px; cursor: pointer; background: linear-gradient(90deg, #00ccff, #6a1fc2); }
+.btn:hover { opacity: .92; }
+hr { border: 0; border-top: 1px solid #e6dff2; margin: 22px 0; }
+h5 { margin: 0 0 12px; font-size: 1.1rem; font-weight: 700; }
+h6 { margin: 18px 0 8px; font-size: .95rem; font-weight: 700; color: #6a1fc2; }
+.muted { color: #6b5f80; text-align: center; margin: 0; }
+.result-box { background: #f8f5fd; border-left: 5px solid #d10f84; border-radius: 8px; padding: 14px 18px; }
+.result-box.err { border-left-color: #c1122f; color: #7a1024; background: #fde3e8; }
+.sku-code { font-family: "Courier New", monospace; font-weight: 700; color: #8a1a9a; letter-spacing: 1px; }
+.sku-big { font-size: 1.3rem; }
+.small { font-size: .85rem; color: #6b5f80; }
+
+.menu-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border: 1px solid #ebe5f5; border-radius: 10px; margin-bottom: 9px; }
+.menu-item:hover { background: #faf7fe; }
+.menu-item.off { opacity: .55; }
+.menu-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.menu-left input[type=checkbox] { width: 1.2em; height: 1.2em; flex: none; }
+.menu-left label { font-weight: 700; color: #00ccff; cursor: pointer; }
+.menu-left .sku-code { font-size: .8rem; display: block; }
+.menu-right { display: flex; align-items: center; gap: 12px; flex: none; }
+.price { color: #c2107a; font-weight: 700; }
+.qty { width: 64px; padding: 4px 8px; font: inherit; border: 1px solid #cfc6e0; border-radius: 6px; }
+.qty:disabled { background: #efeaf6; }
+.stock { font-size: .78rem; color: #6b5f80; display: block; text-align: right; }
+.stock.low { color: #b35c00; font-weight: 700; }
+.smog { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; padding: 10px 14px; background: #fff6d6; border-radius: 10px; color: #5c4600; font-size: .92rem; }
+.smog input { width: 1.2em; height: 1.2em; margin-top: 2px; flex: none; }
+
+.tscroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 440px; }
+th, td { padding: 8px 8px; border-bottom: 1px solid #ece6f5; text-align: left; vertical-align: top; }
+th { font-size: .85rem; color: #6b5f80; font-weight: 700; }
+.r { text-align: right; font-variant-numeric: tabular-nums; }
+.total-row td { border-bottom: 0; font-weight: 700; font-size: 1.1rem; }
+.total { font-family: "Courier New", monospace; color: #c2107a; font-size: 1.3rem; }
+.linkbtn { background: none; border: 0; padding: 0; font: inherit; font-size: .85rem; color: #6a1fc2; cursor: pointer; text-decoration: underline; }
+.tagline { margin: 10px 0 0; font-size: .82rem; color: #6b5f80; font-style: italic; }
+footer { background: #0067bc; color: #f3eefc; text-align: center; padding: 22px 16px; }
+footer p { margin: 0; }
+[hidden] { display: none !important; }
+@media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } .card-body { padding: 18px; } }
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <span class="brand">
+           <img src= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNUV_g28p3wbxuDZKFPa05hP5ye-JHMpvG3kJYD8Dh0g&s=10" style="max-width: 40px; max-height: 40px;">
+           
+            </svg>
+            O'Hare Air Co.
+        </span>
+        <div class="tabs" role="tablist">
+            <button class="tab" id="tabSku" type="button" aria-current="page">SKU Generator</button>
+            <button class="tab" id="tabOrder" type="button">Checkout &amp; Receipt</button>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <!-- SKU GENERATOR -->
+    <section class="card" id="skuView">
+        <div class="card-header">
+            <h3>SKU Generator</h3>
+            <small>Every product you code here appears in the checkout catalog</small>
+        </div>
+        <div class="card-body">
+            <div class="row2">
+                <div class="mb">
+                    <label class="lbl" for="category">Category</label>
+                    <select id="category" class="ctl">
+                        <option selected>Bottle Air</option><option>Tree Types</option><option>Air Accessories</option>
+                    </select>
+                </div>
+                <div class="mb">
+                    <label class="lbl" for="product_name">Product name</label>
+                    <input id="product_name" class="ctl" type="text" placeholder="e.g. Mountain Breeze Bottle" autocomplete="off">
+                </div>
+                <div class="mb">
+                    <label class="lbl" for="price">Price (₱)</label>
+                    <input id="price" class="ctl" type="number" min="0" step="1" placeholder="e.g. 120" inputmode="decimal">
+                </div>
+                <div class="mb">
+                    <label class="lbl" for="quantity">Stock quantity</label>
+                    <input id="quantity" class="ctl" type="number" min="0" step="1" placeholder="e.g. 100" inputmode="numeric">
+                </div>
+            </div>
+            <button class="btn" id="genBtn" type="button">Generate SKU</button>
+
+            <div id="sku_output" style="margin-top:18px" aria-live="polite">
+                <p class="muted">Your generated SKU will appear here.</p>
+            </div>
+
+            <hr>
+            <h5>Inventory</h5>
+            <div id="inventory"></div>
+        </div>
+        <div class="card-footer">Format: CATEGORY-PRODUCT-NUMBER, like AIR-SNI-001 or TRE-DIS-001</div>
+    </section>
+
+    <!-- CHECKOUT -->
+    <section class="card" id="orderView" hidden>
+        <div class="card-header">
+            <h3>Checkout</h3>
+            <small>Fresh air and fake plastic trees, since the real ones are gone</small>
+        </div>
+        <div class="card-body">
+            <h5>Catalog</h5>
+            <div id="menu"></div>
+            <label class="smog"><input type="checkbox" id="smog"> <span><strong>Smog day pricing.</strong> Adds 50% to bottle air, because everyone is breathing harder.</span></label>
+            <button class="btn" id="orderBtn" type="button" style="margin-top:14px">Create Order</button>
+            <hr>
+            <div id="show" aria-live="polite"><p class="muted">Your receipt will appear here.</p></div>
+        </div>
+        <div class="card-footer">Pick your items, set quantities, and click "Create Order". Stock updates automatically.</div>
+    </section>
+</main>
+
+<footer><p>O'Hare Air Co. &mdash; SKU Generator &amp; Checkout &mdash; 1st Quarter Project &mdash; "O'hare Air" and the movie The Lorax is owned by Universal Pictures. We do not claim any ownership.</p></footer>
+
+ <script type="py" src="main.py"></script>
+</body>
+</html>
